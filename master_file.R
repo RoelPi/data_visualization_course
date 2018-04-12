@@ -79,7 +79,7 @@ g1 <- ggplot(dt1,aes(x=CD_YEAR,y=mean_price,label=transactions)) +
   geom_line(col=pal[1]) + 
   geom_point(aes(size=transactions), col=pal[1]) + 
   geom_text(vjust=3.5,hjust=0.5,size=2.5) +
-  labs(y='mean price (1000)',x='') +
+  labs(y='mean price (1000)',x='',title='Plot 1: Mean property price and transactions in Ghent (2010-2016)') +
   scale_x_continuous(limits=c(2009,2017),breaks=seq(2010,2016)) +
   scale_y_continuous(limits=c(200,280),breaks=seq(200,280,10)) +
   scale_radius(range=c(3,10),name='properties sold') +
@@ -95,7 +95,7 @@ dt2 <- dt_gent[,.(mean_price = MS_MEAN_PRICE/1000),by=.(CD_YEAR,CD_TYPE_NL)]
 g2 <- ggplot(dt2,aes(x=CD_YEAR,y=mean_price,color=CD_TYPE_NL,group=CD_TYPE_NL)) + 
   geom_line() +
   geom_point() +
-  labs(y='mean price (1000)',x='') +
+  labs(y='mean price (1000)',x='', title='Plot 2: Mean property price per type (2010-2016)') +
   scale_color_manual(values=pal,name='') +
   scale_x_continuous(limits=c(2009,2017),breaks=seq(2010,2016)) +
   scale_y_continuous(limits=c(180,420),breaks=seq(180,420,40)) +
@@ -137,7 +137,7 @@ g3 <- ggplot(dt3,aes(x=value,y=variable,label=legend, group=as.factor(CD_YEAR)))
   geom_text(vjust=-1.5,hjust=0.2,size=2.5) +
   facet_grid(CD_TYPE_NL~.) +
   t +
-  labs(x='mean price (1000)',y='') +
+  labs(x='mean price (1000)',y='',title='Plot 3: Mean property price per segment (2010 vs 2016)') +
   scale_x_continuous(limits=c(80,620),breaks=seq(80,620,100)) +
   scale_y_continuous(limits=c(0,1),breaks=seq(0,1,0.2)) +
   scale_fill_manual(values=pal, name='year') +
@@ -171,7 +171,7 @@ g4 <- ggplot(dt4,aes(x=CD_YEAR,y=growth,group=variable,col=variable)) +
   scale_color_manual(values=pal,name='segment') +
   scale_x_continuous(limits=c(2009,2017),breaks=seq(2010,2016)) +
   scale_y_continuous(limits=c(90,170),breaks=seq(90,170,10)) +
-  labs(y='cumulative growth',x='')
+  labs(y='cumulative growth',x='', title='Plot 4: Cumulative mean price growth per segment (2010-2016)')
 g4
 rm(dt4)
 
@@ -205,7 +205,7 @@ g5 <- ggplot(dt5,aes(x=CD_YEAR,y=growth,group=variable,col=variable)) +
   scale_color_manual(values=pal,name='segment') +
   scale_x_continuous(limits=c(2009,2017),breaks=seq(2010,2016)) +
   scale_y_continuous(limits=c(80,170),breaks=seq(80,170,10)) +
-  labs(y='cumulative growth',x='')
+  labs(y='cumulative growth',x='',title='Plot 4: Cumulative mean price growth per segment in Belgian cities (2010-2016)')
 g5
 rm(dt5)
 
@@ -220,7 +220,7 @@ g6 <- ggplot(dt6,aes(x=CD_YEAR,y=MS_TOTAL_TRANSACTIONS,fill=CD_TYPE_NL)) +
   scale_y_continuous(labels = percent_format()) +
   scale_fill_manual(values=pal,name='') +
   scale_x_continuous(limits=c(2009,2017),breaks=seq(2010,2016)) +
-  labs(x='',y='') +
+  labs(x='',y='',title='Plot 6: Transaction share per property type in Ghent (2010-2016)') +
   t
 g6
 
@@ -247,7 +247,7 @@ g7 <- ggplot(dt7,aes(x=MS_MEAN_PRICE,y=CD_REFNIS_NL,group=CD_REFNIS_NL, label=gr
   geom_text(size=2,vjust=2.1) +
   facet_grid(~CD_TYPE_NL) +
   scale_color_manual(values=pal,name='') +
-  labs(y='',x='mean price (1000)') +
+  labs(y='',x='mean price (1000)',title='Plot 7: Mean price growth per property type in Belgian cities (2010 vs 2016)') +
   t
 g7
 rm(dt7)
@@ -256,7 +256,7 @@ rm(dt7)
 # Eigth Plot ###################################################
 ################################################################
 
-dt8 <- dt[CD_TYPE_NL %in% c('houses','flats')]
+dt8 <- dt[CD_TYPE_NL %in% c('houses')]
 dt8 <- dt8[,.(MS_TOTAL_TRANSACTIONS=sum(MS_TOTAL_TRANSACTIONS),MS_TOTAL_PRICE=sum(MS_TOTAL_PRICE)),by=.(CD_YEAR,CD_REFNIS,CD_REFNIS_NL)]
 dt8 <- dt8[order(CD_YEAR,-MS_TOTAL_TRANSACTIONS)]
 dt8 <- dt8[,mean_price := round(MS_TOTAL_PRICE / MS_TOTAL_TRANSACTIONS/1000)]
@@ -280,7 +280,7 @@ map <- get_map(location = 'Belgium', zoom = 8)
 g8 <- ggmap(map) +
   geom_point(aes(x = Longitude, y = Latitude, color = growth), data = dt8 ,size=6, alpha=0.5) +
   scale_colour_gradient2(low = pal[3], mid = '#ffffff', high = pal[1], midpoint = 15, name='growth (%)') +
-  labs(x='',y='') +
+  labs(x='',y='',title='Plot 8: Mean house price growth in Belgian cities (2010 vs 2016)') +
   t +
   theme(axis.text.x = element_blank(),
         axis.text.y = element_blank(),
@@ -302,7 +302,7 @@ dt9 <- merge(dt9,pop,by.x=c('CD_REFNIS','CD_YEAR'),by.y=c('nis','jaar'),all.x=T)
 g9 <- ggplot(dt9,aes(x=werkzaamheidsgraad,y=MS_MEAN_PRICE,col=ifelse(inwoners >= 50000,'population ≥ 50k','population < 50k'))) + 
   geom_point(size=2.5) +
   scale_color_manual(values=pal,name='') + 
-  labs(x='employment rate',y='mean house price (1000)') +
+  labs(x='employment rate',y='mean house price (1000)',title='Plot 9: Employment and mean house price in Belgian cities (2014)') +
   t
 g9
 rm(dt9)
