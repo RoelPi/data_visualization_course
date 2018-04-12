@@ -137,7 +137,7 @@ g3 <- ggplot(dt3,aes(x=value,y=variable,label=legend, group=as.factor(CD_YEAR)))
   geom_text(vjust=-1.5,hjust=0.2,size=2.5) +
   facet_grid(CD_TYPE_NL~.) +
   t +
-  labs(x='mean price (1000)',y='',title='Plot 3: Mean property price per segment (2010 vs 2016)') +
+  labs(x='mean price (1000)',y='',title='Plot 3: Mean property price per type and segment (2010 vs 2016)') +
   scale_x_continuous(limits=c(80,620),breaks=seq(80,620,100)) +
   scale_y_continuous(limits=c(0,1),breaks=seq(0,1,0.2)) +
   scale_fill_manual(values=pal, name='year') +
